@@ -8,7 +8,7 @@
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "Up To 30% Off  •  Winter Sale  <a href=\"/collections/sale\">SHOP</a>",
+            "text": "Up To 30% Off  •  Winter Sale  <a href=\"\/collections\/sale\">SHOP<\/a>",
             "link": "",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
@@ -30,7 +30,7 @@
         "divider_width": 0,
         "show_store_link": true,
         "store_link_text": "Find a Store",
-        "store_link_url": "/pages/store-locator",
+        "store_link_url": "\/pages\/store-locator",
         "padding-block-start": 4,
         "padding-block-end": 4
       }
