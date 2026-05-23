@@ -1,10 +1,8 @@
-{% if section.blocks.size > 1 %}
-  <script
-    src="{{ 'announcement-bar.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
+<script
+  src="{{ 'announcement-bar.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <aside
@@ -13,10 +11,8 @@
 >
   {% liquid
     assign autoplay = false
-    assign show_arrows = false
     if section.blocks.size > 1
       assign autoplay = true
-      assign show_arrows = true
     endif
   %}
 
@@ -26,18 +22,34 @@
       autoplay="{{ section.settings.speed }}" aria-live="polite"
     {% endif %}
   >
-    {% if show_arrows %}
-      {% render 'slideshow-arrows', icon_style: 'chevron' %}
-    {% endif %}
+    <button class="announcement-bar__arrow announcement-bar__arrow--previous" ref="previous" on:click="/previous" aria-label="{{ 'accessibility.previous' | t }}">
+      <img src="{{ 'weui-arrow-outlined-2.svg' | asset_url }}" alt="" width="12" height="24" loading="lazy">
+    </button>
 
     <div class="announcement-bar__slides">
       {% content_for 'blocks' %}
     </div>
+
+    <button class="announcement-bar__arrow announcement-bar__arrow--next" ref="next" on:click="/next" aria-label="{{ 'accessibility.next' | t }}">
+      <img src="{{ 'weui-arrow-outlined.svg' | asset_url }}" alt="" width="12" height="24" loading="lazy">
+    </button>
   </announcement-bar-component>
+
+  {% if section.settings.show_store_link and section.settings.store_link_url != blank %}
+    <a href="{{ section.settings.store_link_url }}" class="announcement-bar__store-link">
+      <img src="{{ 'frame.svg' | asset_url }}" alt="" width="20" height="20" loading="lazy">
+      <span>{{ section.settings.store_link_text }}</span>
+    </a>
+  {% endif %}
 </aside>
 
 {% stylesheet %}
   .announcement-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-inline: 32px;
     border-block-end: var(--border-bottom-width) solid var(--color-border);
   }
 
@@ -45,19 +57,37 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    position: relative;
+    justify-content: center;
+    gap: 72px;
+    flex: 1;
 
     @media screen and (max-width: 749px) {
+      gap: 32px;
       grid-column: 1 / -1;
     }
+  }
+
+  .announcement-bar__arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-foreground);
+  }
+
+  .announcement-bar__arrow img {
+    width: 12px;
+    height: 24px;
   }
 
   .announcement-bar__slides {
     display: grid;
     grid: [stack] auto / [stack] auto;
-    width: calc(100% - var(--button-size) * 2);
-    max-width: 680px;
-    margin-inline: auto;
+    width: auto;
   }
 
   .announcement-bar__slides > * {
@@ -74,39 +104,6 @@
     }
   }
 
-  .announcement-bar__slider slideshow-arrows {
-    padding: 0;
-    mix-blend-mode: normal;
-  }
-
-  .announcement-bar__slider slideshow-arrows .slideshow-control {
-    color: var(--color-foreground);
-  }
-
-  .announcement-bar__slider .slideshow-control {
-    display: flex;
-    padding: 0;
-    width: var(--button-size);
-    height: var(--button-size);
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    animation: none;
-
-    @media screen and (min-width: 750px) {
-      --slideshow-control-offset: calc((var(--button-size) - var(--icon-size-xs)) / 2);
-
-      .section--page-width &.slideshow-control--previous {
-        transform: translateX(var(--slideshow-control-offset));
-      }
-    }
-  }
-
-  .announcement-bar__slider .slideshow-control .svg-wrapper {
-    width: var(--icon-size-xs);
-    height: var(--icon-size-xs);
-  }
-
   .announcement-bar__slide {
     place-content: center;
   }
@@ -115,9 +112,51 @@
     margin: 0;
   }
 
+  .announcement-bar__text a {
+    color: #27863A;
+    text-decoration: underline;
+    font-weight: 700;
+  }
+
   .announcement-bar__link {
     position: absolute;
     inset: 0;
+  }
+
+  .announcement-bar__store-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--color-foreground);
+    font-size: 1rem;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .announcement-bar__store-link img {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .announcement-bar {
+      padding-inline: 16px;
+    }
+
+    .announcement-bar__store-link {
+      display: none;
+    }
+
+    .announcement-bar__text {
+      font-size: 0.75rem !important;
+      line-height: 1;
+    }
+
+    .announcement-bar__text a {
+      letter-spacing: 1.8px;
+    }
   }
 {% endstylesheet %}
 
@@ -177,6 +216,27 @@
       "step": 0.5,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.store_link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_store_link",
+      "label": "t:settings.show_store_link",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "store_link_text",
+      "label": "t:settings.store_link_text",
+      "default": "Find a Store"
+    },
+    {
+      "type": "url",
+      "id": "store_link_url",
+      "label": "t:settings.store_link_url"
     },
     {
       "type": "header",
