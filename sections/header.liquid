@@ -1111,6 +1111,78 @@
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
   }
+
+  /* === Stio custom overrides === */
+
+  /* Desktop search trigger pill styling */
+  @media screen and (min-width: 750px) {
+    .header__column--right .search-action .header-actions__action {
+      width: 231px;
+      height: 38px;
+      border-radius: 24px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      justify-content: flex-end;
+      padding-inline-end: 12px;
+      background: transparent;
+    }
+
+    /* Remove default negative margins on search-action in pill mode */
+    .header__column--right .search-action {
+      margin-inline: 0;
+    }
+  }
+
+  /* Desktop right column gap: 24px to match Figma */
+  @media screen and (min-width: 750px) {
+    .header__column--right {
+      gap: 24px;
+    }
+  }
+
+  /* Desktop header padding: 12px block, 32px inline (Figma pad:12/32/12/32) */
+  @media screen and (min-width: 750px) {
+    .header {
+      --header-padding: 12px;
+    }
+
+    .header__row .header__columns {
+      padding-inline: 32px;
+    }
+  }
+
+  /* Mobile header shadow */
+  @media screen and (max-width: 749px) {
+    .header {
+      box-shadow: 0 10px 15px rgba(130, 130, 130, 0.09);
+      position: relative;
+      z-index: var(--layer-heightened);
+    }
+  }
+
+  /* Make header-actions span both rightA and rightB on mobile for wishlist + cart icons */
+  @media screen and (max-width: 749px) {
+    .header__columns header-actions {
+      grid-area: unset;
+      grid-column: 4 / -1;
+      grid-row: 1;
+      justify-content: flex-end;
+    }
+  }
+
+  #header-component[data-menu-style='drawer'] .header__columns header-actions {
+    grid-area: unset;
+    grid-column: 4 / -1;
+    grid-row: 1;
+    justify-content: flex-end;
+  }
+
+  @media screen and (min-width: 750px) {
+    #header-component[data-menu-style='menu'] .header__columns header-actions {
+      grid-area: right;
+      grid-column: unset;
+      grid-row: unset;
+    }
+  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}

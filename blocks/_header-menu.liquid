@@ -24,7 +24,7 @@
     {% if block_settings.navigation_bar == true %}
       <div
         class="menu-list menu-list--mobile{% if transparent == blank %} color-{{ block_settings.color_scheme_navigation_bar }}{% endif %}"
-        style="--menu-horizontal-gap: 15px; --mobile-nav-margin: auto;"
+        style="--menu-horizontal-gap: 28px; --mobile-nav-margin: auto;"
         data-hydration-key="header-menu-mobile-navigation-bar"
       >
         <div class="menu-list__scroll-container">
@@ -678,6 +678,23 @@
   .mega-menu__submenu {
     /* preserves the inherited grid layout when this submenu wrapper is used */
     display: contents;
+  }
+
+  /* Desktop menu 40px gap override to match Figma */
+  @media screen and (min-width: 750px) {
+    .menu-list:not(.menu-list--mobile) .menu-list__link-title {
+      padding-inline: 20px;
+    }
+
+    .menu-list:not(.menu-list--mobile) .overflow-menu::part(list) {
+      margin-inline: -20px;
+    }
+  }
+
+  /* Mobile navigation bar font styling to match Figma 16px/700 */
+  .menu-list--mobile .menu-list__item {
+    font-weight: 700;
+    font-size: 1rem;
   }
 {% endstylesheet %}
 

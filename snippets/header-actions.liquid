@@ -63,6 +63,16 @@
   {% endif %}
   {{- block.shopify_attributes -}}
 >
+  <a
+    href="#"
+    class="header-actions__action header-actions__wishlist"
+    aria-label="{{ 'accessibility.wishlist' | t }}"
+  >
+    <span class="svg-wrapper" aria-hidden="true">
+      {{ 'svg-image-3-3-2.svg' | inline_asset_content }}
+    </span>
+  </a>
+
   {% if shop.customer_accounts_enabled %}
     {% liquid
       assign account_actions_style = ''
@@ -694,6 +704,23 @@
       opacity: 0;
     }
   }
+  /* Hide account button on mobile to match Figma mobile layout */
+  @media screen and (max-width: 749px) {
+    .account-button {
+      display: none;
+    }
+  }
+
+  #header-component[data-menu-style='drawer'] .account-button {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    #header-component[data-menu-style='menu'] .account-button {
+      display: block;
+    }
+  }
+
   .header-actions__text {
     display: flex;
     align-items: center;
