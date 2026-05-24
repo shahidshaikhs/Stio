@@ -32,7 +32,7 @@
           "settings": {
             "text": "<p>Built for rain, wind and daily movement.<\/p>",
             "width": "fit-content",
-            "max_width": "narrow",
+            "max_width": "small",
             "alignment": "left",
             "type_preset": "h1",
             "font": "var(--font-heading--family)",

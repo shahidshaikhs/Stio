@@ -27,7 +27,7 @@
   capture text_block_classes
     if text_width == '100%'
       echo 'text-block--align-' | append: block_settings.alignment
-      if block_settings.max_width == 'none'
+      if block_settings.max_width == 'none' or block_settings.max_width == 'full'
         echo ' text-block--full-width '
       endif
     endif
@@ -58,7 +58,15 @@
     {% render 'spacing-padding', settings: block_settings %}
     {% render 'typography-style', settings: block_settings %}
     --width: {{ text_width }};
-    --max-width: var(--max-width--{{ type }}-{{ block_settings.max_width }});
+    {% if block_settings.max_width == 'small' %}
+      --max-width: 25rem;
+    {% elsif block_settings.max_width == 'medium' %}
+      --max-width: 40rem;
+    {% elsif block_settings.max_width == 'full' %}
+      --max-width: 100%;
+    {% else %}
+      --max-width: var(--max-width--{{ type }}-{{ block_settings.max_width }});
+    {% endif %}
     {% if text_width == "100%" %}
       --text-align: {{ block_settings.alignment }};
     {% endif %}
