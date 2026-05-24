@@ -537,6 +537,16 @@
   </div>
 </div>
 
+{% if section.settings.gradient_direction_mobile != 'same_as_desktop' %}
+  {% style %}
+    @media screen and (max-width: 749px) {
+      #shopify-section-{{ section.id }} .overlay--gradient {
+        --overlay-direction: {{ section.settings.gradient_direction_mobile }} !important;
+      }
+    }
+  {% endstyle %}
+{% endif %}
+
 {% stylesheet %}
   .hero-wrapper {
     --hero-height-offset: 0px;
@@ -1189,9 +1199,46 @@
         {
           "value": "to bottom",
           "label": "t:options.down"
+        },
+        {
+          "value": "to right",
+          "label": "t:options.right"
+        },
+        {
+          "value": "to left",
+          "label": "t:options.left"
         }
       ],
       "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction_mobile",
+      "label": "t:settings.gradient_direction_mobile",
+      "options": [
+        {
+          "value": "same_as_desktop",
+          "label": "t:options.same_as_desktop"
+        },
+        {
+          "value": "to top",
+          "label": "t:options.up"
+        },
+        {
+          "value": "to bottom",
+          "label": "t:options.down"
+        },
+        {
+          "value": "to right",
+          "label": "t:options.right"
+        },
+        {
+          "value": "to left",
+          "label": "t:options.left"
+        }
+      ],
+      "default": "same_as_desktop",
       "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
     },
     {
