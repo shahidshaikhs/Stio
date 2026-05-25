@@ -1,7 +1,7 @@
 {% doc %}
   Tab block for Tabbed Carousel section.
-  Renders both the tab button and its panel (slideshow of category cards).
-  The tab button is moved into the section header via JavaScript on init.
+  Renders the tab button and a slideshow panel of its nested category card blocks.
+  The button is moved into the section header tabs row by tabbed-carousel.js.
 {% enddoc %}
 
 {%- liquid
@@ -12,7 +12,42 @@
 -%}
 
 {% capture blocks_content %}
-  {% content_for 'blocks' %}
+  {% for card_block in block.blocks %}
+    <div class="tabbed-carousel__card" {{ card_block.shopify_attributes }}>
+      {% if card_block.settings.link != blank %}
+        <a href="{{ card_block.settings.link }}" class="tabbed-carousel__card-link">
+      {% endif %}
+      <div class="tabbed-carousel__card-image-wrapper">
+        {% if card_block.settings.image %}
+          {{
+            card_block.settings.image
+            | image_url: width: card_block.settings.image.width
+            | image_tag:
+              loading: 'lazy',
+              class: 'tabbed-carousel__card-img',
+              sizes: '(min-width: 750px) 208px, 163px',
+              widths: '163,208,326,416',
+              alt: card_block.settings.image.alt
+          }}
+        {% else %}
+          {{ 'collection-1' | placeholder_svg_tag: 'tabbed-carousel__card-placeholder' }}
+        {% endif %}
+      </div>
+      <div class="tabbed-carousel__card-info">
+        <span class="tabbed-carousel__card-title">{{ card_block.settings.title | escape }}</span>
+        {% if card_block.settings.badge_text != blank %}
+          <span class="tabbed-carousel__badge">
+            <span class="tabbed-carousel__badge-dot"></span>
+            {{ card_block.settings.badge_text | escape }}
+          </span>
+        {% endif %}
+      </div>
+      {% if card_block.settings.link != blank %}
+        </a>
+      {% endif %}
+    </div>
+  {% endfor %}
+
   {% if block.settings.view_all_text != blank %}
     <a href="{{ block.settings.view_all_url }}" class="tabbed-carousel__view-all">
       <div class="tabbed-carousel__view-all-media">
