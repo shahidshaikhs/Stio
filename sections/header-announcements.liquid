@@ -1,0 +1,278 @@
+<script
+  src="{{ 'announcement-bar.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<aside
+  class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
+  style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;"
+>
+  {% liquid
+    assign autoplay = false
+    if section.blocks.size > 1
+      assign autoplay = true
+    endif
+  %}
+
+  <announcement-bar-component
+    class="announcement-bar__slider"
+    {% if autoplay == true %}
+      autoplay="{{ section.settings.speed }}" aria-live="polite"
+    {% endif %}
+  >
+    <button class="announcement-bar__arrow announcement-bar__arrow--previous" ref="previous" on:click="/previous" aria-label="{{ 'accessibility.previous' | t }}">
+      <img src="{{ 'weui-arrow-outlined-2.svg' | asset_url }}" alt="" width="12" height="24" loading="lazy">
+    </button>
+
+    <div class="announcement-bar__slides">
+      {% content_for 'blocks' %}
+    </div>
+
+    <button class="announcement-bar__arrow announcement-bar__arrow--next" ref="next" on:click="/next" aria-label="{{ 'accessibility.next' | t }}">
+      <img src="{{ 'weui-arrow-outlined.svg' | asset_url }}" alt="" width="12" height="24" loading="lazy">
+    </button>
+  </announcement-bar-component>
+
+  {% if section.settings.show_store_link and section.settings.store_link_url != blank %}
+    <a href="{{ section.settings.store_link_url }}" class="announcement-bar__store-link">
+      <img src="{{ 'frame.svg' | asset_url }}" alt="" width="20" height="20" loading="lazy">
+      <span>{{ section.settings.store_link_text }}</span>
+    </a>
+  {% endif %}
+</aside>
+
+{% stylesheet %}
+  .announcement-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-inline: 32px;
+    border-block-end: var(--border-bottom-width) solid var(--color-border);
+  }
+
+  .announcement-bar__slider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 72px;
+    flex: 1;
+
+    @media screen and (max-width: 749px) {
+      gap: 32px;
+      grid-column: 1 / -1;
+    }
+  }
+
+  .announcement-bar__arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-foreground);
+  }
+
+  .announcement-bar__arrow img {
+    width: 12px;
+    height: 24px;
+  }
+
+  .announcement-bar__slides {
+    display: grid;
+    grid: [stack] auto / [stack] auto;
+    width: auto;
+  }
+
+  .announcement-bar__slides > * {
+    grid-area: stack;
+  }
+
+  .announcement-bar__slide {
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    content-visibility: visible;
+
+    &[aria-hidden='true'] {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  .announcement-bar__slide {
+    place-content: center;
+  }
+
+  .announcement-bar__text:first-child {
+    margin: 0;
+  }
+
+  .announcement-bar__text a {
+    color: #27863A;
+    text-decoration: underline;
+    font-weight: 700;
+  }
+
+  .announcement-bar__link {
+    position: absolute;
+    inset: 0;
+  }
+
+  .announcement-bar__store-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--color-foreground);
+    font-size: 1rem;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .announcement-bar__store-link img {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .announcement-bar {
+      padding-inline: 16px;
+    }
+
+    .announcement-bar__store-link {
+      display: none;
+    }
+
+    .announcement-bar__text {
+      font-size: 0.75rem !important;
+      line-height: 1;
+    }
+
+    .announcement-bar__text a {
+      letter-spacing: 1.8px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.announcement_bar",
+  "blocks": [
+    {
+      "type": "_announcement"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:settings.scroll_speed",
+      "min": 2,
+      "max": 10,
+      "default": 5,
+      "unit": "sec"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.section_width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-4",
+      "label": "t:settings.color_scheme"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "label": "t:settings.divider_thickness",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.store_link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_store_link",
+      "label": "t:settings.show_store_link",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "store_link_text",
+      "label": "t:settings.store_link_text",
+      "default": "Find a Store"
+    },
+    {
+      "type": "url",
+      "id": "store_link_url",
+      "label": "t:settings.store_link_url"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.announcement_bar",
+      "blocks": {
+        "announcement_1": {
+          "type": "_announcement"
+        }
+      },
+      "block_order": ["announcement_1"]
+    }
+  ]
+}
+{% endschema %}
