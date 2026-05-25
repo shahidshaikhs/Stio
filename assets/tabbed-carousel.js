@@ -62,6 +62,36 @@ class TabbedCarouselComponent extends Component {
     const tabId = button.getAttribute('data-tab-id');
     this.activateTab(tabId);
   }
+
+  /**
+   * Scrolls the active panel's track forward by one card width.
+   */
+  next() {
+    const track = this.#getActiveTrack();
+    if (!track) return;
+    const cardWidth = track.querySelector('.tabbed-carousel__card, .tabbed-carousel__view-all')?.offsetWidth ?? 208;
+    track.scrollBy({ left: cardWidth + 16, behavior: 'smooth' });
+  }
+
+  /**
+   * Scrolls the active panel's track backward by one card width.
+   */
+  previous() {
+    const track = this.#getActiveTrack();
+    if (!track) return;
+    const cardWidth = track.querySelector('.tabbed-carousel__card, .tabbed-carousel__view-all')?.offsetWidth ?? 208;
+    track.scrollBy({ left: -(cardWidth + 16), behavior: 'smooth' });
+  }
+
+  /**
+   * Returns the scroll track of the currently visible panel.
+   *
+   * @returns {HTMLElement | null}
+   */
+  #getActiveTrack() {
+    const activePanel = this.querySelector('.tabbed-carousel__panel:not([hidden])');
+    return activePanel ? activePanel.querySelector('.tabbed-carousel__track') : null;
+  }
 }
 
 customElements.define('tabbed-carousel-component', TabbedCarouselComponent);
