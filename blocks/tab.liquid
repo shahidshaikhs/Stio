@@ -1,0 +1,108 @@
+{% doc %}
+  Tab block for Tabbed Carousel section.
+  Accepts nested Category Card blocks inside it.
+{% enddoc %}
+
+{%- liquid
+  assign slide_count = block.blocks.size
+  if block.settings.view_all_text != blank
+    assign slide_count = slide_count | plus: 1
+  endif
+-%}
+
+{% capture blocks_content %}
+  {% content_for 'blocks' %}
+  {% if block.settings.view_all_text != blank %}
+    <a href="{{ block.settings.view_all_url }}" class="tabbed-carousel__view-all">
+      <div class="tabbed-carousel__view-all-media">
+        {% if block.settings.view_all_image %}
+          {{
+            block.settings.view_all_image
+            | image_url: width: block.settings.view_all_image.width
+            | image_tag:
+              loading: 'lazy',
+              class: 'tabbed-carousel__view-all-bg',
+              sizes: '(min-width: 750px) 208px, 163px',
+              widths: '163,208,326,416',
+              alt: block.settings.view_all_text
+          }}
+        {% endif %}
+        <div class="tabbed-carousel__view-all-overlay"></div>
+      </div>
+      <div class="tabbed-carousel__view-all-content">
+        <span class="tabbed-carousel__view-all-arrow">&#8250;</span>
+        <span class="tabbed-carousel__view-all-text">{{ block.settings.view_all_text | escape }}</span>
+      </div>
+    </a>
+  {% endif %}
+{% endcapture %}
+
+<div
+  ref="panels[]"
+  class="tabbed-carousel__panel"
+  data-tab-id="{{ block.id }}"
+  hidden
+  role="tabpanel"
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="tabbed-carousel__slideshow-wrapper"
+    style="--gutter-slide-width: var(--util-page-margin-offset);"
+  >
+    {% render 'slideshow',
+      slides: blocks_content,
+      show_arrows: true,
+      icon_style: 'arrow',
+      icon_shape: 'circle',
+      auto_hide_controls: false,
+      infinite: false,
+      initial_slide: 0,
+      slide_count: slide_count,
+      slide_position: 'top',
+      slideshow_gutters: 'start end',
+      class: 'tabbed-carousel__slideshow'
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Tab",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "tab_label",
+      "label": "Tab label",
+      "default": "Category"
+    },
+    {
+      "type": "header",
+      "content": "View all card"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all text"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "View all link"
+    },
+    {
+      "type": "image_picker",
+      "id": "view_all_image",
+      "label": "View all image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category-card"
+    },
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

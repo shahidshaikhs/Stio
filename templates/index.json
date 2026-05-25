@@ -319,79 +319,92 @@
             "tab_label": "Women",
             "view_all_text": "All Women's Clothing",
             "view_all_url": ""
-          }
-        },
-        "category_card_zFyhHi": {
-          "type": "category-card",
-          "settings": {
-            "title": "Jackets & Vests",
-            "link": "",
-            "badge_text": "New Arrivals"
-          }
-        },
-        "category_card_QEpJgd": {
-          "type": "category-card",
-          "settings": {
-            "title": "Pants",
-            "link": "",
-            "badge_text": ""
-          }
-        },
-        "category_card_8wicq4": {
-          "type": "category-card",
-          "settings": {
-            "title": "Baselayers",
-            "link": "",
-            "badge_text": ""
-          }
-        },
-        "category_card_74BFxX": {
-          "type": "category-card",
-          "settings": {
-            "title": "Skirts & Tops",
-            "link": "",
-            "badge_text": ""
-          }
-        },
-        "category_card_68KUFt": {
-          "type": "category-card",
-          "settings": {
-            "title": "Fleece",
-            "link": "",
-            "badge_text": ""
-          }
-        },
-        "category_card_DTUA9E": {
-          "type": "category-card",
-          "settings": {
-            "title": "Insulation",
-            "link": "",
-            "badge_text": "New Arrivals"
-          }
-        },
-        "category_card_6zAQpi": {
-          "type": "category-card",
-          "settings": {
-            "title": "Sweatshirts & Hoodies",
-            "link": "",
-            "badge_text": "New Arrivals"
-          }
-        },
-        "category_card_raHePR": {
-          "type": "category-card",
-          "settings": {
-            "title": "T-Shirts & Tanks",
-            "link": "",
-            "badge_text": ""
-          }
-        },
-        "category_card_cFabLN": {
-          "type": "category-card",
-          "settings": {
-            "title": "Shorts",
-            "link": "",
-            "badge_text": ""
-          }
+          },
+          "blocks": {
+            "category_card_zFyhHi": {
+              "type": "category-card",
+              "settings": {
+                "title": "Jackets & Vests",
+                "link": "",
+                "badge_text": "New Arrivals"
+              }
+            },
+            "category_card_QEpJgd": {
+              "type": "category-card",
+              "settings": {
+                "title": "Pants",
+                "link": "",
+                "badge_text": ""
+              }
+            },
+            "category_card_8wicq4": {
+              "type": "category-card",
+              "settings": {
+                "title": "Baselayers",
+                "link": "",
+                "badge_text": ""
+              }
+            },
+            "category_card_74BFxX": {
+              "type": "category-card",
+              "settings": {
+                "title": "Skirts & Tops",
+                "link": "",
+                "badge_text": ""
+              }
+            },
+            "category_card_68KUFt": {
+              "type": "category-card",
+              "settings": {
+                "title": "Fleece",
+                "link": "",
+                "badge_text": ""
+              }
+            },
+            "category_card_DTUA9E": {
+              "type": "category-card",
+              "settings": {
+                "title": "Insulation",
+                "link": "",
+                "badge_text": "New Arrivals"
+              }
+            },
+            "category_card_6zAQpi": {
+              "type": "category-card",
+              "settings": {
+                "title": "Sweatshirts & Hoodies",
+                "link": "",
+                "badge_text": "New Arrivals"
+              }
+            },
+            "category_card_raHePR": {
+              "type": "category-card",
+              "settings": {
+                "title": "T-Shirts & Tanks",
+                "link": "",
+                "badge_text": ""
+              }
+            },
+            "category_card_cFabLN": {
+              "type": "category-card",
+              "settings": {
+                "title": "Shorts",
+                "link": "",
+                "badge_text": ""
+              }
+            }
+          },
+          "block_order": [
+            "category_card_zFyhHi",
+            "category_card_QEpJgd",
+            "category_card_8wicq4",
+            "category_card_74BFxX",
+            "category_card_68KUFt",
+            "category_card_DTUA9E",
+            "category_card_6zAQpi",
+            "category_card_raHePR",
+            "category_card_cFabLN"
+          ]
         },
         "tab_XzKBwi": {
           "type": "tab",
@@ -412,15 +425,6 @@
       },
       "block_order": [
         "tab_nm7HhH",
-        "category_card_zFyhHi",
-        "category_card_QEpJgd",
-        "category_card_8wicq4",
-        "category_card_74BFxX",
-        "category_card_68KUFt",
-        "category_card_DTUA9E",
-        "category_card_6zAQpi",
-        "category_card_raHePR",
-        "category_card_cFabLN",
         "tab_XzKBwi",
         "tab_B8X3PV"
       ],

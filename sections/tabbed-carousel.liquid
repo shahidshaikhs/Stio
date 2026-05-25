@@ -15,143 +15,26 @@
       <h2 class="tabbed-carousel__heading">{{ section.settings.heading | escape }}</h2>
     {% endif %}
 
-    {% assign tab_count = 0 %}
-    {% for block in section.blocks %}
-      {% if block.type == 'tab' %}
-        {% assign tab_count = tab_count | plus: 1 %}
-      {% endif %}
-    {% endfor %}
-
-    {% if tab_count > 0 %}
+    {% if section.blocks.size > 0 %}
       <div class="tabbed-carousel__tabs" role="tablist">
-        {% assign tab_idx = 0 %}
         {% for block in section.blocks %}
-          {% if block.type == 'tab' %}
-            <button
-              ref="tabs[]"
-              on:click="/switchTab"
-              data-tab-index="{{ tab_idx }}"
-              class="tabbed-carousel__tab{% if tab_idx == 0 %} tabbed-carousel__tab--active{% endif %}"
-              aria-selected="{% if tab_idx == 0 %}true{% else %}false{% endif %}"
-              role="tab"
-              type="button"
-              {{ block.shopify_attributes }}
-            >
-              {{ block.settings.tab_label | escape }}
-            </button>
-            {% assign tab_idx = tab_idx | plus: 1 %}
-          {% endif %}
+          <button
+            ref="tabs[]"
+            on:click="/switchTab"
+            data-tab-id="{{ block.id }}"
+            class="tabbed-carousel__tab{% if forloop.first %} tabbed-carousel__tab--active{% endif %}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            role="tab"
+            type="button"
+          >
+            {{ block.settings.tab_label | escape }}
+          </button>
         {% endfor %}
       </div>
     {% endif %}
   </div>
 
-  {% assign tab_blocks = section.blocks | where: 'type', 'tab' %}
-  {% for tab in tab_blocks %}
-    {% assign panel_idx = forloop.index0 %}
-    <div
-      ref="panels[]"
-      class="tabbed-carousel__panel"
-      data-tab-index="{{ panel_idx }}"
-      {% unless forloop.first %}hidden{% endunless %}
-      role="tabpanel"
-    >
-      {% capture slides %}
-        {% assign slide_count_for_tab = 0 %}
-        {% assign found_tab = false %}
-        {% for block in section.blocks %}
-          {% if block.type == 'tab' %}
-            {% if block.id == tab.id %}
-              {% assign found_tab = true %}
-              {% continue %}
-            {% elsif found_tab %}
-              {% break %}
-            {% endif %}
-          {% endif %}
-          {% if block.type == 'category-card' and found_tab %}
-            {% assign slide_count_for_tab = slide_count_for_tab | plus: 1 %}
-            <div class="tabbed-carousel__card" {{ block.shopify_attributes }}>
-              {% if block.settings.link != blank %}
-                <a href="{{ block.settings.link }}" class="tabbed-carousel__card-link">
-              {% endif %}
-              <div class="tabbed-carousel__card-image-wrapper">
-                {% if block.settings.image %}
-                  {{
-                    block.settings.image
-                    | image_url: width: block.settings.image.width
-                    | image_tag:
-                      loading: 'lazy',
-                      class: 'tabbed-carousel__card-img',
-                      sizes: '(min-width: 750px) 208px, 163px',
-                      widths: '163,208,326,416',
-                      alt: block.settings.image.alt
-                  }}
-                {% else %}
-                  {{ 'collection-1' | placeholder_svg_tag: 'tabbed-carousel__card-placeholder' }}
-                {% endif %}
-              </div>
-              <div class="tabbed-carousel__card-info">
-                <span class="tabbed-carousel__card-title">{{ block.settings.title | escape }}</span>
-                {% if block.settings.badge_text != blank %}
-                  <span class="tabbed-carousel__badge">
-                    <span class="tabbed-carousel__badge-dot"></span>
-                    {{ block.settings.badge_text | escape }}
-                  </span>
-                {% endif %}
-              </div>
-              {% if block.settings.link != blank %}
-                </a>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-
-        {% if tab.settings.view_all_text != blank %}
-          {% assign slide_count_for_tab = slide_count_for_tab | plus: 1 %}
-          <a href="{{ tab.settings.view_all_url }}" class="tabbed-carousel__view-all">
-            <div class="tabbed-carousel__view-all-media">
-              {% if tab.settings.view_all_image %}
-                {{
-                  tab.settings.view_all_image
-                  | image_url: width: tab.settings.view_all_image.width
-                  | image_tag:
-                    loading: 'lazy',
-                    class: 'tabbed-carousel__view-all-bg',
-                    sizes: '(min-width: 750px) 208px, 163px',
-                    widths: '163,208,326,416',
-                    alt: tab.settings.view_all_text
-                }}
-              {% endif %}
-              <div class="tabbed-carousel__view-all-overlay"></div>
-            </div>
-            <div class="tabbed-carousel__view-all-content">
-              <span class="tabbed-carousel__view-all-arrow">&#8250;</span>
-              <span class="tabbed-carousel__view-all-text">{{ tab.settings.view_all_text | escape }}</span>
-            </div>
-          </a>
-        {% endif %}
-      {% endcapture %}
-
-      <div
-        class="tabbed-carousel__slideshow-wrapper"
-        style="--gutter-slide-width: var(--util-page-margin-offset);"
-      >
-        {% render 'slideshow',
-          slides: slides,
-          show_arrows: true,
-          icon_style: 'arrow',
-          icon_shape: 'circle',
-          auto_hide_controls: false,
-          infinite: false,
-          initial_slide: 0,
-          slide_count: slide_count_for_tab,
-          slide_position: 'top',
-          slideshow_gutters: 'start end',
-          class: 'tabbed-carousel__slideshow'
-        %}
-      </div>
-    </div>
-  {% endfor %}
+  {% content_for 'blocks' %}
 </tabbed-carousel-component>
 
 <script src="{{ 'tabbed-carousel.js' | asset_url }}" type="module"></script>
@@ -500,62 +383,10 @@
   ],
   "blocks": [
     {
-      "type": "tab",
-      "name": "Tab",
-      "settings": [
-        {
-          "type": "text",
-          "id": "tab_label",
-          "label": "Tab label",
-          "default": "Category"
-        },
-        {
-          "type": "header",
-          "content": "View all card"
-        },
-        {
-          "type": "text",
-          "id": "view_all_text",
-          "label": "View all text"
-        },
-        {
-          "type": "url",
-          "id": "view_all_url",
-          "label": "View all link"
-        },
-        {
-          "type": "image_picker",
-          "id": "view_all_image",
-          "label": "View all image"
-        }
-      ]
+      "type": "@theme"
     },
     {
-      "type": "category-card",
-      "name": "Category card",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Category"
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "Link"
-        },
-        {
-          "type": "text",
-          "id": "badge_text",
-          "label": "Badge text"
-        }
-      ]
+      "type": "@app"
     }
   ],
   "presets": [
@@ -570,76 +401,28 @@
           "settings": {
             "tab_label": "Women",
             "view_all_text": "All Women's Clothing"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Jackets & Vests",
-            "badge_text": "New Arrivals"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Pants"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Baselayers"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Skirts & Tops"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Fleece"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Insulation",
-            "badge_text": "New Arrivals"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Sweatshirts & Hoodies",
-            "badge_text": "New Arrivals"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "T-Shirts & Tanks"
-          }
-        },
-        {
-          "type": "category-card",
-          "settings": {
-            "title": "Shorts"
-          }
+          },
+          "blocks": [
+            { "type": "category-card", "settings": { "title": "Jackets & Vests", "badge_text": "New Arrivals" } },
+            { "type": "category-card", "settings": { "title": "Pants" } },
+            { "type": "category-card", "settings": { "title": "Baselayers" } },
+            { "type": "category-card", "settings": { "title": "Skirts & Tops" } },
+            { "type": "category-card", "settings": { "title": "Fleece" } },
+            { "type": "category-card", "settings": { "title": "Insulation", "badge_text": "New Arrivals" } },
+            { "type": "category-card", "settings": { "title": "Sweatshirts & Hoodies", "badge_text": "New Arrivals" } },
+            { "type": "category-card", "settings": { "title": "T-Shirts & Tanks" } },
+            { "type": "category-card", "settings": { "title": "Shorts" } }
+          ]
         },
         {
           "type": "tab",
-          "settings": {
-            "tab_label": "Men"
-          }
+          "settings": { "tab_label": "Men" },
+          "blocks": []
         },
         {
           "type": "tab",
-          "settings": {
-            "tab_label": "Gear"
-          }
+          "settings": { "tab_label": "Gear" },
+          "blocks": []
         }
       ]
     }
