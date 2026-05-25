@@ -1,0 +1,632 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<tabbed-carousel-component
+  class="
+    section
+    section--page-width
+    color-{{ section.settings.color_scheme }}
+    tabbed-carousel
+    spacing-style
+  "
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  <div class="page-width tabbed-carousel__header">
+    {% if section.settings.heading != blank %}
+      <h2 class="tabbed-carousel__heading">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="tabbed-carousel__tabs" role="tablist">
+        {% for block in section.blocks %}
+          <button
+            ref="tabs[]"
+            on:click="/switchTab"
+            data-tab-index="{{ forloop.index0 }}"
+            class="tabbed-carousel__tab{% if forloop.first %} tabbed-carousel__tab--active{% endif %}"
+            aria-selected="{{ forloop.first }}"
+            role="tab"
+            type="button"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.tab_label | escape }}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% for block in section.blocks %}
+    <div
+      ref="panels[]"
+      class="tabbed-carousel__panel"
+      data-tab-index="{{ forloop.index0 }}"
+      {% unless forloop.first %}hidden{% endunless %}
+      role="tabpanel"
+    >
+      {% capture slides %}
+        {% for card in block.blocks %}
+          <div class="tabbed-carousel__card" {{ card.shopify_attributes }}>
+            {% if card.settings.link != blank %}
+              <a href="{{ card.settings.link }}" class="tabbed-carousel__card-link">
+            {% endif %}
+            <div class="tabbed-carousel__card-image-wrapper">
+              {% if card.settings.image %}
+                {{
+                  card.settings.image
+                  | image_url: width: card.settings.image.width
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'tabbed-carousel__card-img',
+                    sizes: '(min-width: 750px) 208px, 163px',
+                    widths: '163,208,326,416',
+                    alt: card.settings.image.alt
+                }}
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'tabbed-carousel__card-placeholder' }}
+              {% endif %}
+            </div>
+            <div class="tabbed-carousel__card-info">
+              <span class="tabbed-carousel__card-title">{{ card.settings.title | escape }}</span>
+              {% if card.settings.badge_text != blank %}
+                <span class="tabbed-carousel__badge">
+                  <span class="tabbed-carousel__badge-dot"></span>
+                  {{ card.settings.badge_text | escape }}
+                </span>
+              {% endif %}
+            </div>
+            {% if card.settings.link != blank %}
+              </a>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        {% if block.settings.view_all_text != blank %}
+          <a href="{{ block.settings.view_all_url }}" class="tabbed-carousel__view-all">
+            <div class="tabbed-carousel__view-all-media">
+              {% if block.settings.view_all_image %}
+                {{
+                  block.settings.view_all_image
+                  | image_url: width: block.settings.view_all_image.width
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'tabbed-carousel__view-all-bg',
+                    sizes: '(min-width: 750px) 208px, 163px',
+                    widths: '163,208,326,416',
+                    alt: block.settings.view_all_text
+                }}
+              {% endif %}
+              <div class="tabbed-carousel__view-all-overlay"></div>
+            </div>
+            <div class="tabbed-carousel__view-all-content">
+              <span class="tabbed-carousel__view-all-arrow">&#8250;</span>
+              <span class="tabbed-carousel__view-all-text">{{ block.settings.view_all_text | escape }}</span>
+            </div>
+          </a>
+        {% endif %}
+      {% endcapture %}
+
+      {% assign card_count = block.blocks.size %}
+      {% if block.settings.view_all_text != blank %}
+        {% assign card_count = card_count | plus: 1 %}
+      {% endif %}
+
+      <div
+        class="tabbed-carousel__slideshow-wrapper"
+        style="--gutter-slide-width: var(--util-page-margin-offset);"
+      >
+        {% render 'slideshow',
+          slides: slides,
+          show_arrows: true,
+          icon_style: 'arrow',
+          icon_shape: 'circle',
+          auto_hide_controls: false,
+          infinite: false,
+          initial_slide: 0,
+          slide_count: card_count,
+          slide_position: 'top',
+          slideshow_gutters: 'start end',
+          class: 'tabbed-carousel__slideshow'
+        %}
+      </div>
+    </div>
+  {% endfor %}
+</tabbed-carousel-component>
+
+<script src="{{ 'tabbed-carousel.js' | asset_url }}" type="module"></script>
+
+{% stylesheet %}
+  /* ==============================
+   * Tabbed Carousel - Section
+   * ============================== */
+
+  tabbed-carousel-component {
+    display: block;
+    position: relative;
+  }
+
+  .tabbed-carousel__header {
+    margin-block-end: 24px;
+  }
+
+  /* Heading */
+  .tabbed-carousel__heading {
+    font-family: var(--font-heading--family);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 28px;
+    color: var(--color-foreground);
+    margin: 0 0 16px;
+
+    @media screen and (min-width: 750px) {
+      font-size: 40px;
+      line-height: 48px;
+      margin-block-end: 24px;
+    }
+  }
+
+  /* Tabs */
+  .tabbed-carousel__tabs {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+
+    @media screen and (min-width: 750px) {
+      gap: 32px;
+    }
+  }
+
+  .tabbed-carousel__tab {
+    font-family: var(--font-heading--family);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    background: none;
+    border: none;
+    color: #181918;
+    cursor: pointer;
+    padding: 8px 0;
+    border-radius: 24px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    @media screen and (min-width: 750px) {
+      font-size: 20px;
+      line-height: 24px;
+    }
+  }
+
+  .tabbed-carousel__tab--active {
+    font-weight: 700;
+    background-color: #181918;
+    color: #fff;
+    padding: 8px 20px;
+
+    @media screen and (min-width: 750px) {
+      padding: 12px 24px;
+    }
+  }
+
+  /* Panel */
+  .tabbed-carousel__panel {
+    position: relative;
+  }
+
+  .tabbed-carousel__panel[hidden] {
+    display: none;
+  }
+
+  /* Slideshow wrapper */
+  .tabbed-carousel__slideshow-wrapper {
+    position: relative;
+  }
+
+  /* Slideshow gap overrides */
+  .tabbed-carousel__slideshow slideshow-slides {
+    --slideshow-gap: 8px;
+
+    @media screen and (min-width: 750px) {
+      --slideshow-gap: 16px;
+    }
+  }
+
+  /* Card */
+  .tabbed-carousel__card {
+    flex: 0 0 163px;
+    scroll-snap-align: start;
+
+    @media screen and (min-width: 750px) {
+      flex: 0 0 208px;
+    }
+  }
+
+  .tabbed-carousel__card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .tabbed-carousel__card-image-wrapper {
+    aspect-ratio: 163 / 245;
+    overflow: hidden;
+    border-radius: 0;
+    background-color: rgb(var(--color-background-rgb, 245, 245, 245));
+
+    @media screen and (min-width: 750px) {
+      aspect-ratio: 208 / 277;
+    }
+  }
+
+  .tabbed-carousel__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .tabbed-carousel__card-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tabbed-carousel__card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-block-start: 12px;
+  }
+
+  .tabbed-carousel__card-title {
+    font-family: var(--font-heading--family);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #181918;
+
+    @media screen and (min-width: 750px) {
+      font-size: 20px;
+      line-height: 24px;
+    }
+  }
+
+  /* Badge */
+  .tabbed-carousel__badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-heading--family);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #27863A;
+  }
+
+  .tabbed-carousel__badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #27863A;
+    flex-shrink: 0;
+  }
+
+  /* View All card */
+  .tabbed-carousel__view-all {
+    flex: 0 0 163px;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    aspect-ratio: 163 / 245;
+
+    @media screen and (min-width: 750px) {
+      flex: 0 0 208px;
+      aspect-ratio: 208 / 277;
+    }
+  }
+
+  .tabbed-carousel__view-all-media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tabbed-carousel__view-all-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .tabbed-carousel__view-all-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+
+    @media screen and (min-width: 750px) {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .tabbed-carousel__view-all-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .tabbed-carousel__view-all-text {
+    font-family: var(--font-heading--family);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+    text-decoration: underline;
+    color: #181918;
+
+    @media screen and (min-width: 750px) {
+      color: #fff;
+    }
+  }
+
+  .tabbed-carousel__view-all-arrow {
+    font-size: 20px;
+    opacity: 0.3;
+    color: #27863A;
+
+    @media screen and (min-width: 750px) {
+      color: #fff;
+    }
+  }
+
+  /* Arrow overrides */
+  .tabbed-carousel__panel slideshow-arrows {
+    align-items: flex-start;
+    justify-content: flex-end;
+    mix-blend-mode: normal;
+  }
+
+  .tabbed-carousel__panel .slideshow-control--previous {
+    display: none;
+  }
+
+  .tabbed-carousel__panel .slideshow-control--next {
+    pointer-events: auto;
+    opacity: 1;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #27863A;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #27863A;
+    margin-block-start: calc(163px * 245 / 163 / 2 - 22px);
+    margin-inline-end: 16px;
+
+    @media screen and (min-width: 750px) {
+      margin-block-start: calc(277px / 2 - 22px);
+      margin-inline-end: 32px;
+    }
+  }
+
+  .tabbed-carousel__panel .slideshow-control--next .svg-wrapper,
+  .tabbed-carousel__panel .slideshow-control--next svg {
+    color: #27863A;
+  }
+
+  .tabbed-carousel__panel .slideshow-control[disabled] {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabbed carousel",
+  "class": "tabbed-carousel-wrapper section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Popular categories"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Tab label",
+          "default": "Category"
+        },
+        {
+          "type": "header",
+          "content": "View all card"
+        },
+        {
+          "type": "text",
+          "id": "view_all_text",
+          "label": "View all text"
+        },
+        {
+          "type": "url",
+          "id": "view_all_url",
+          "label": "View all link"
+        },
+        {
+          "type": "image_picker",
+          "id": "view_all_image",
+          "label": "View all image"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "category-card",
+          "name": "Category card",
+          "settings": [
+            {
+              "type": "image_picker",
+              "id": "image",
+              "label": "Image"
+            },
+            {
+              "type": "text",
+              "id": "title",
+              "label": "Title",
+              "default": "Category"
+            },
+            {
+              "type": "url",
+              "id": "link",
+              "label": "Link"
+            },
+            {
+              "type": "text",
+              "id": "badge_text",
+              "label": "Badge text"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabbed carousel",
+      "settings": {
+        "heading": "Popular categories"
+      },
+      "blocks": {
+        "tab_women": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Women",
+            "view_all_text": "All Women's Clothing"
+          },
+          "blocks": {
+            "card_1": {
+              "type": "category-card",
+              "settings": {
+                "title": "Jackets & Vests",
+                "badge_text": "New Arrivals"
+              }
+            },
+            "card_2": {
+              "type": "category-card",
+              "settings": {
+                "title": "Pants"
+              }
+            },
+            "card_3": {
+              "type": "category-card",
+              "settings": {
+                "title": "Baselayers"
+              }
+            },
+            "card_4": {
+              "type": "category-card",
+              "settings": {
+                "title": "Skirts & Tops"
+              }
+            },
+            "card_5": {
+              "type": "category-card",
+              "settings": {
+                "title": "Fleece"
+              }
+            },
+            "card_6": {
+              "type": "category-card",
+              "settings": {
+                "title": "Insulation",
+                "badge_text": "New Arrivals"
+              }
+            },
+            "card_7": {
+              "type": "category-card",
+              "settings": {
+                "title": "Sweatshirts & Hoodies",
+                "badge_text": "New Arrivals"
+              }
+            },
+            "card_8": {
+              "type": "category-card",
+              "settings": {
+                "title": "T-Shirts & Tanks"
+              }
+            },
+            "card_9": {
+              "type": "category-card",
+              "settings": {
+                "title": "Shorts"
+              }
+            }
+          },
+          "block_order": ["card_1", "card_2", "card_3", "card_4", "card_5", "card_6", "card_7", "card_8", "card_9"]
+        },
+        "tab_men": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Men"
+          }
+        },
+        "tab_gear": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Gear"
+          }
+        }
+      },
+      "block_order": ["tab_women", "tab_men", "tab_gear"]
+    }
+  ]
+}
+{% endschema %}
