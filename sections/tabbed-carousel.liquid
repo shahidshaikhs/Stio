@@ -58,13 +58,32 @@
     }
   }
 
-  /* Tab group wrapper — no layout, just a container */
+  /* Tab group wrapper */
   .tabbed-carousel__tab-group {
-    display: contents;
+    display: block;
   }
 
   /* Tab buttons hidden inside their group until JS moves them to the tabs row */
   .tabbed-carousel__tab-group .tabbed-carousel__tab {
+    display: none;
+  }
+
+  /* Horizontal scroll track for cards */
+  .tabbed-carousel__track {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    @media screen and (min-width: 750px) {
+      gap: 16px;
+    }
+  }
+
+  .tabbed-carousel__track::-webkit-scrollbar {
     display: none;
   }
 

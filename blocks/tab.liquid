@@ -1,77 +1,8 @@
 {% doc %}
   Tab block for Tabbed Carousel section.
-  Renders the tab button and a slideshow panel of its nested category card blocks.
+  Renders the tab button and a panel of its nested category card blocks.
   The button is moved into the section header tabs row by tabbed-carousel.js.
 {% enddoc %}
-
-{%- liquid
-  assign slide_count = block.blocks.size
-  if block.settings.view_all_text != blank
-    assign slide_count = slide_count | plus: 1
-  endif
--%}
-
-{% capture blocks_content %}
-  {% for card_block in block.blocks %}
-    <div class="tabbed-carousel__card" {{ card_block.shopify_attributes }}>
-      {% if card_block.settings.link != blank %}
-        <a href="{{ card_block.settings.link }}" class="tabbed-carousel__card-link">
-      {% endif %}
-      <div class="tabbed-carousel__card-image-wrapper">
-        {% if card_block.settings.image %}
-          {{
-            card_block.settings.image
-            | image_url: width: card_block.settings.image.width
-            | image_tag:
-              loading: 'lazy',
-              class: 'tabbed-carousel__card-img',
-              sizes: '(min-width: 750px) 208px, 163px',
-              widths: '163,208,326,416',
-              alt: card_block.settings.image.alt
-          }}
-        {% else %}
-          {{ 'collection-1' | placeholder_svg_tag: 'tabbed-carousel__card-placeholder' }}
-        {% endif %}
-      </div>
-      <div class="tabbed-carousel__card-info">
-        <span class="tabbed-carousel__card-title">{{ card_block.settings.title | escape }}</span>
-        {% if card_block.settings.badge_text != blank %}
-          <span class="tabbed-carousel__badge">
-            <span class="tabbed-carousel__badge-dot"></span>
-            {{ card_block.settings.badge_text | escape }}
-          </span>
-        {% endif %}
-      </div>
-      {% if card_block.settings.link != blank %}
-        </a>
-      {% endif %}
-    </div>
-  {% endfor %}
-
-  {% if block.settings.view_all_text != blank %}
-    <a href="{{ block.settings.view_all_url }}" class="tabbed-carousel__view-all">
-      <div class="tabbed-carousel__view-all-media">
-        {% if block.settings.view_all_image %}
-          {{
-            block.settings.view_all_image
-            | image_url: width: block.settings.view_all_image.width
-            | image_tag:
-              loading: 'lazy',
-              class: 'tabbed-carousel__view-all-bg',
-              sizes: '(min-width: 750px) 208px, 163px',
-              widths: '163,208,326,416',
-              alt: block.settings.view_all_text
-          }}
-        {% endif %}
-        <div class="tabbed-carousel__view-all-overlay"></div>
-      </div>
-      <div class="tabbed-carousel__view-all-content">
-        <span class="tabbed-carousel__view-all-arrow">&#8250;</span>
-        <span class="tabbed-carousel__view-all-text">{{ block.settings.view_all_text | escape }}</span>
-      </div>
-    </a>
-  {% endif %}
-{% endcapture %}
 
 <div class="tabbed-carousel__tab-group" {{ block.shopify_attributes }}>
   <button
@@ -93,23 +24,32 @@
     hidden
     role="tabpanel"
   >
-    <div
-      class="tabbed-carousel__slideshow-wrapper"
-      style="--gutter-slide-width: var(--util-page-margin-offset);"
-    >
-      {% render 'slideshow',
-        slides: blocks_content,
-        show_arrows: true,
-        icon_style: 'arrow',
-        icon_shape: 'circle',
-        auto_hide_controls: false,
-        infinite: false,
-        initial_slide: 0,
-        slide_count: slide_count,
-        slide_position: 'top',
-        slideshow_gutters: 'start end',
-        class: 'tabbed-carousel__slideshow'
-      %}
+    <div class="tabbed-carousel__track">
+      {% content_for 'blocks' %}
+
+      {% if block.settings.view_all_text != blank %}
+        <a href="{{ block.settings.view_all_url }}" class="tabbed-carousel__view-all">
+          <div class="tabbed-carousel__view-all-media">
+            {% if block.settings.view_all_image %}
+              {{
+                block.settings.view_all_image
+                | image_url: width: block.settings.view_all_image.width
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'tabbed-carousel__view-all-bg',
+                  sizes: '(min-width: 750px) 208px, 163px',
+                  widths: '163,208,326,416',
+                  alt: block.settings.view_all_text
+              }}
+            {% endif %}
+            <div class="tabbed-carousel__view-all-overlay"></div>
+          </div>
+          <div class="tabbed-carousel__view-all-content">
+            <span class="tabbed-carousel__view-all-arrow">&#8250;</span>
+            <span class="tabbed-carousel__view-all-text">{{ block.settings.view_all_text | escape }}</span>
+          </div>
+        </a>
+      {% endif %}
     </div>
   </div>
 </div>
