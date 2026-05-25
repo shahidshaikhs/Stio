@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero_jVaWmY": {
@@ -6,7 +15,7 @@
         "subheading_text": {
           "type": "text",
           "settings": {
-            "text": "<p>Spring Collection 2026<\/p>",
+            "text": "<p>Spring Collection 2026</p>",
             "width": "fit-content",
             "max_width": "narrow",
             "alignment": "left",
@@ -25,12 +34,13 @@
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         },
         "heading_text": {
           "type": "text",
           "settings": {
-            "text": "<p>Built for rain, wind and daily movement.<\/p>",
+            "text": "<p>Built for rain, wind and daily movement.</p>",
             "width": "fit-content",
             "max_width": "small",
             "alignment": "left",
@@ -49,20 +59,22 @@
             "padding-block-end": 16,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         },
         "hero_button": {
           "type": "button",
           "settings": {
             "label": "Shop Spring Collection",
-            "link": "shopify:\/\/collections\/all",
+            "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fill",
             "custom_width_mobile": 100
-          }
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -73,15 +85,25 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify:\/\/shop_images\/rectangle-3537-mobile-header-21837633.jpg",
+        "image_1": "shopify://shop_images/rectangle-3537-mobile-header-21837633.jpg",
         "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": false,
+        "media_type_1_mobile": "image",
+        "media_type_2_mobile": "image",
+        "link": "",
+        "open_in_new_tab": false,
         "content_direction": "column",
         "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "page-width",
         "section_height": "large",
+        "section_height_custom": 50,
         "color_scheme": "scheme-6",
         "toggle_overlay": true,
         "overlay_color": "#00000080",
@@ -89,6 +111,7 @@
         "gradient_direction": "to right",
         "gradient_direction_mobile": "to top",
         "blurred_reflection": false,
+        "reflection_opacity": 75,
         "padding-block-start": 40,
         "padding-block-end": 40
       }
@@ -134,7 +157,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>{{ closest.collection.title }}<\/h3>",
+                "text": "<h3>{{ closest.collection.title }}</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -286,10 +309,133 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "tabbed_carousel_P7aCi7": {
+      "type": "tabbed-carousel",
+      "blocks": {
+        "tab_nm7HhH": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Women",
+            "view_all_text": "All Women's Clothing",
+            "view_all_url": ""
+          }
+        },
+        "category_card_zFyhHi": {
+          "type": "category-card",
+          "settings": {
+            "title": "Jackets & Vests",
+            "link": "",
+            "badge_text": "New Arrivals"
+          }
+        },
+        "category_card_QEpJgd": {
+          "type": "category-card",
+          "settings": {
+            "title": "Pants",
+            "link": "",
+            "badge_text": ""
+          }
+        },
+        "category_card_8wicq4": {
+          "type": "category-card",
+          "settings": {
+            "title": "Baselayers",
+            "link": "",
+            "badge_text": ""
+          }
+        },
+        "category_card_74BFxX": {
+          "type": "category-card",
+          "settings": {
+            "title": "Skirts & Tops",
+            "link": "",
+            "badge_text": ""
+          }
+        },
+        "category_card_68KUFt": {
+          "type": "category-card",
+          "settings": {
+            "title": "Fleece",
+            "link": "",
+            "badge_text": ""
+          }
+        },
+        "category_card_DTUA9E": {
+          "type": "category-card",
+          "settings": {
+            "title": "Insulation",
+            "link": "",
+            "badge_text": "New Arrivals"
+          }
+        },
+        "category_card_6zAQpi": {
+          "type": "category-card",
+          "settings": {
+            "title": "Sweatshirts & Hoodies",
+            "link": "",
+            "badge_text": "New Arrivals"
+          }
+        },
+        "category_card_raHePR": {
+          "type": "category-card",
+          "settings": {
+            "title": "T-Shirts & Tanks",
+            "link": "",
+            "badge_text": ""
+          }
+        },
+        "category_card_cFabLN": {
+          "type": "category-card",
+          "settings": {
+            "title": "Shorts",
+            "link": "",
+            "badge_text": ""
+          }
+        },
+        "tab_XzKBwi": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Men",
+            "view_all_text": "",
+            "view_all_url": ""
+          }
+        },
+        "tab_B8X3PV": {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Gear",
+            "view_all_text": "",
+            "view_all_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "tab_nm7HhH",
+        "category_card_zFyhHi",
+        "category_card_QEpJgd",
+        "category_card_8wicq4",
+        "category_card_74BFxX",
+        "category_card_68KUFt",
+        "category_card_DTUA9E",
+        "category_card_6zAQpi",
+        "category_card_raHePR",
+        "category_card_cFabLN",
+        "tab_XzKBwi",
+        "tab_B8X3PV"
+      ],
+      "name": "Tabbed carousel",
+      "settings": {
+        "heading": "Popular categories",
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "tabbed_carousel_P7aCi7"
   ]
 }
