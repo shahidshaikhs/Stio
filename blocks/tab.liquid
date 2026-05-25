@@ -52,7 +52,16 @@
           </a>
         {% endif %}
       </div>
-      {%- render 'slideshow-arrows' -%}
+      <div class="tabbed-carousel__arrows" aria-hidden="true">
+        <button
+          class="tabbed-carousel__arrow-next"
+          on:click="/next"
+          type="button"
+          aria-label="Next"
+        >
+          <span class="svg-wrapper">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
