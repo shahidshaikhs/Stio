@@ -1,6 +1,7 @@
 {% doc %}
   Tab block for Tabbed Carousel section.
-  Accepts nested Category Card blocks inside it.
+  Renders both the tab button and its panel (slideshow of category cards).
+  The tab button is moved into the section header via JavaScript on init.
 {% enddoc %}
 
 {%- liquid
@@ -37,31 +38,44 @@
   {% endif %}
 {% endcapture %}
 
-<div
-  ref="panels[]"
-  class="tabbed-carousel__panel"
-  data-tab-id="{{ block.id }}"
-  hidden
-  role="tabpanel"
-  {{ block.shopify_attributes }}
->
-  <div
-    class="tabbed-carousel__slideshow-wrapper"
-    style="--gutter-slide-width: var(--util-page-margin-offset);"
+<div class="tabbed-carousel__tab-group" {{ block.shopify_attributes }}>
+  <button
+    ref="tabs[]"
+    on:click="/switchTab"
+    data-tab-id="{{ block.id }}"
+    class="tabbed-carousel__tab"
+    type="button"
+    role="tab"
+    aria-selected="false"
   >
-    {% render 'slideshow',
-      slides: blocks_content,
-      show_arrows: true,
-      icon_style: 'arrow',
-      icon_shape: 'circle',
-      auto_hide_controls: false,
-      infinite: false,
-      initial_slide: 0,
-      slide_count: slide_count,
-      slide_position: 'top',
-      slideshow_gutters: 'start end',
-      class: 'tabbed-carousel__slideshow'
-    %}
+    {{ block.settings.tab_label | escape }}
+  </button>
+
+  <div
+    ref="panels[]"
+    class="tabbed-carousel__panel"
+    data-tab-id="{{ block.id }}"
+    hidden
+    role="tabpanel"
+  >
+    <div
+      class="tabbed-carousel__slideshow-wrapper"
+      style="--gutter-slide-width: var(--util-page-margin-offset);"
+    >
+      {% render 'slideshow',
+        slides: blocks_content,
+        show_arrows: true,
+        icon_style: 'arrow',
+        icon_shape: 'circle',
+        auto_hide_controls: false,
+        infinite: false,
+        initial_slide: 0,
+        slide_count: slide_count,
+        slide_position: 'top',
+        slideshow_gutters: 'start end',
+        class: 'tabbed-carousel__slideshow'
+      %}
+    </div>
   </div>
 </div>
 

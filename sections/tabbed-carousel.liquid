@@ -15,23 +15,12 @@
       <h2 class="tabbed-carousel__heading">{{ section.settings.heading | escape }}</h2>
     {% endif %}
 
-    {% if section.blocks.size > 0 %}
-      <div class="tabbed-carousel__tabs" role="tablist">
-        {% for block in section.blocks %}
-          <button
-            ref="tabs[]"
-            on:click="/switchTab"
-            data-tab-id="{{ block.id }}"
-            class="tabbed-carousel__tab{% if forloop.first %} tabbed-carousel__tab--active{% endif %}"
-            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-            role="tab"
-            type="button"
-          >
-            {{ block.settings.tab_label | escape }}
-          </button>
-        {% endfor %}
-      </div>
-    {% endif %}
+    <div class="tabbed-carousel__tabs" role="tablist">
+      {%- comment -%}
+        Tab buttons are rendered inside each Tab block (blocks/tab.liquid)
+        and moved here by tabbed-carousel.js on connectedCallback.
+      {%- endcomment -%}
+    </div>
   </div>
 
   {% content_for 'blocks' %}
@@ -69,7 +58,17 @@
     }
   }
 
-  /* Tabs */
+  /* Tab group wrapper — no layout, just a container */
+  .tabbed-carousel__tab-group {
+    display: contents;
+  }
+
+  /* Tab buttons hidden inside their group until JS moves them to the tabs row */
+  .tabbed-carousel__tab-group .tabbed-carousel__tab {
+    display: none;
+  }
+
+  /* Tabs row */
   .tabbed-carousel__tabs {
     display: flex;
     gap: 24px;
@@ -78,6 +77,11 @@
     @media screen and (min-width: 750px) {
       gap: 32px;
     }
+  }
+
+  /* Tab buttons visible once inside the tabs row */
+  .tabbed-carousel__tabs .tabbed-carousel__tab {
+    display: inline-flex;
   }
 
   .tabbed-carousel__tab {

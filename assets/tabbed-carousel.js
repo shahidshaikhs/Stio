@@ -11,7 +11,18 @@ class TabbedCarouselComponent extends Component {
   connectedCallback() {
     super.connectedCallback();
 
-    // Activate the first tab on load
+    // Move tab buttons from their block groups into the tabs header row.
+    // Each Tab block renders its button inside .tabbed-carousel__tab-group;
+    // the CSS hides them there and shows them once they're in .tabbed-carousel__tabs.
+    const tabsContainer = this.querySelector('.tabbed-carousel__tabs');
+
+    if (tabsContainer && this.refs.tabs.length > 0) {
+      for (const tab of this.refs.tabs) {
+        tabsContainer.appendChild(tab);
+      }
+    }
+
+    // Activate the first tab
     if (this.refs.tabs.length > 0) {
       const firstTabId = this.refs.tabs[0].getAttribute('data-tab-id');
       this.activateTab(firstTabId);
