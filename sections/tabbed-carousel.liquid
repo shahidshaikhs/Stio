@@ -142,9 +142,10 @@
     display: none;
   }
 
-  /* Slideshow wrapper */
+  /* Slideshow wrapper — bleeds to right viewport edge */
   .tabbed-carousel__slideshow-wrapper {
     position: relative;
+    margin-inline-end: calc(-1 * var(--util-page-margin-offset));
   }
 
   /* Slideshow gap overrides */
@@ -318,11 +319,13 @@
     inset: 0;
     display: flex;
     align-items: flex-start;
-    justify-content: flex-end;
+    justify-content: space-between;
     pointer-events: none;
     z-index: 2;
   }
 
+  /* Shared arrow button styles */
+  .tabbed-carousel__arrow-prev,
   .tabbed-carousel__arrow-next {
     pointer-events: auto;
     flex-shrink: 0;
@@ -338,19 +341,49 @@
     color: #27863A;
     cursor: pointer;
     margin-block-start: calc(245px / 2 - 22px);
-    margin-inline-end: 16px;
 
     @media screen and (min-width: 750px) {
       margin-block-start: calc(277px / 2 - 22px);
-      margin-inline-end: 32px;
     }
   }
 
+  .tabbed-carousel__arrow-prev .svg-wrapper,
+  .tabbed-carousel__arrow-prev svg,
   .tabbed-carousel__arrow-next .svg-wrapper,
   .tabbed-carousel__arrow-next svg {
     color: #27863A;
     width: 20px;
     height: 20px;
+  }
+
+  /* Prev: hidden by default, points left */
+  .tabbed-carousel__arrow-prev {
+    display: none;
+    margin-inline-start: 16px;
+    transform: scaleX(-1);
+
+    @media screen and (min-width: 750px) {
+      margin-inline-start: 32px;
+    }
+  }
+
+  /* Next: always visible, points right */
+  .tabbed-carousel__arrow-next {
+    margin-inline-end: 16px;
+
+    @media screen and (min-width: 750px) {
+      margin-inline-end: 32px;
+    }
+  }
+
+  /* Show prev when panel has been scrolled right */
+  .tabbed-carousel__panel--has-prev .tabbed-carousel__arrow-prev {
+    display: flex;
+  }
+
+  /* Hide next when track is scrolled to the end */
+  .tabbed-carousel__panel--at-end .tabbed-carousel__arrow-next {
+    display: none;
   }
 {% endstylesheet %}
 

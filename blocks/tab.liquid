@@ -54,6 +54,14 @@
       </div>
       <div class="tabbed-carousel__arrows" aria-hidden="true">
         <button
+          class="tabbed-carousel__arrow-prev"
+          on:click="/previous"
+          type="button"
+          aria-label="Previous"
+        >
+          <span class="svg-wrapper">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+        </button>
+        <button
           class="tabbed-carousel__arrow-next"
           on:click="/next"
           type="button"

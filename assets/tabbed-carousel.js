@@ -27,6 +27,9 @@ class TabbedCarouselComponent extends Component {
       const firstTabId = this.refs.tabs[0].getAttribute('data-tab-id');
       this.activateTab(firstTabId);
     }
+
+    // Set up scroll-based arrow visibility on all panels
+    this.#initScrollListeners();
   }
 
   /**
@@ -91,6 +94,33 @@ class TabbedCarouselComponent extends Component {
   #getActiveTrack() {
     const activePanel = this.querySelector('.tabbed-carousel__panel:not([hidden])');
     return activePanel ? activePanel.querySelector('.tabbed-carousel__track') : null;
+  }
+
+  /**
+   * Attaches scroll listeners to every panel's track and sets initial arrow state.
+   */
+  #initScrollListeners() {
+    for (const panel of this.refs.panels) {
+      const track = panel.querySelector('.tabbed-carousel__track');
+      if (!track) continue;
+
+      const update = () => this.#updateScrollArrows(panel, track);
+      track.addEventListener('scroll', update, { passive: true });
+      update(); // set initial state
+    }
+  }
+
+  /**
+   * Toggles prev/end classes on a panel based on its track's current scroll position.
+   *
+   * @param {HTMLElement} panel
+   * @param {HTMLElement} track
+   */
+  #updateScrollArrows(panel, track) {
+    const hasPrev = track.scrollLeft > 0;
+    const atEnd = Math.round(track.scrollLeft) + track.clientWidth >= track.scrollWidth;
+    panel.classList.toggle('tabbed-carousel__panel--has-prev', hasPrev);
+    panel.classList.toggle('tabbed-carousel__panel--at-end', atEnd);
   }
 }
 
